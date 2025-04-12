@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escala Semanal de Oração</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: linear-gradient(145deg,rgb(161, 226, 235),rgb(39, 50, 59));
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 20px;s
+    }
+    .week-controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    select#tipoEscala {
+  padding: 10px 15px;
+  font-size: 1em;
+  border: none;
+  border-radius: 8px;
+  background-color: #2e7d32;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin-top: 10px;
+}
+
+select#tipoEscala:hover {
+  background-color: #1b5e20;
+}
+.copy-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  gap: 10px;
+}
+
+.select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.select-wrapper label {
+  color: white;
+  font-weight: bold;
+}
+
+.select-wrapper select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1em;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+}
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 1em;
+      border: none;
+      background: #2e7d32;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #1b5e20;
+    }
+    .schedule {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .day {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    .time-block {
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .copy-button {
+      text-align: center;
+      margin-top: 30px;
+    }
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      button { width: 100%; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Escala Semanal de Oração</h1>
+  <div class="week-controls">
+    <button onclick="changeWeek(-1)"><</button>
+    <span id="weekLabel"></span>
+    <button onclick="changeWeek(1)">></button>
+  </div>
+  <div class="schedule" id="schedule"></div>
+  <div class="copy-button">
+  <div class="select-wrapper">
+    <label for="tipoEscala">Escolher tipo de escala:</label>
+    <select id="tipoEscala">
+      <option value="completo">Completo (Oração, Louvor e Devocional)</option>
+      <option value="louvor">Somente Louvor</option>
+      <option value="oracao">Somente Oração</option>
+      <option value="devocional">Somente Devocional</option>
+    </select>
+  </div>
+  <button onclick="copyToWhatsApp()">📋 Copiar para WhatsApp</button>
+</div>
+
+  <script>
+    
+    const membros = [
+  {id: 1, nome: "Caldina Manhica", tipo: "Jovem"},
+  {id: 2, nome: "Cecilia Chauque", tipo: "Jovem"},
+  {id: 3, nome: "Elsa Coana", tipo: "Mulher"},
+  {id: 4, nome: "Felizardo Matlava", tipo: "Jovem"},
+  {id: 5, nome: "Germano Macucule", tipo: "Jovem"},
+  {id: 6, nome: "Gabriel Mabjaia", tipo: "Jovem"},
+  {id: 7, nome: "Jardel Massingue", tipo: "Jovem"},
+  {id: 8, nome: "Raquel Manica", tipo: "Jovem"},
+  {id: 9, nome: "Vicente Manhica", tipo: "Jovem"},
+  {id: 10, nome: "Salvador Marta", tipo: "Jovem"},
+  {id: 11, nome: "Jaime Macombo", tipo: "Jovem"},
+  {id: 12, nome: "Eduardo Tetino", tipo: "Jovem"},
+  {id: 13, nome: "Gina Xirindza", tipo: "Mulher"},
+  {id: 14, nome: "Rosa cavele", tipo: "Mulher"},
+  {id: 18, nome: "Sandra Chirindza", tipo: "Mulher"},
+  {id: 19, nome: "Zulfa hibrahimo", tipo: "Mulher"},
+  {id: 20, nome: "Celia Matlava", tipo: "Jovem"},
+  {id: 21, nome: "Elizabet Hbevana", tipo: "Mulher"},
+  {id: 22, nome: "Argentina Francisco", tipo: "Mulher"},
+  {id: 23, nome: "Adelaide Xirindza", tipo: "Mulher"},
+  {id: 24, nome: "Helena Manhica", tipo: "Mulher"},
+  {id: 25, nome: "Balbina Matlava", tipo: "Mulher"},
+  {id: 26, nome: "Mario Covana", tipo: "Homem"},
+  {id: 27, nome: "Celeste Munetua", tipo: "Mulher"},
+  {id: 29, nome: "Carolina Massingue", tipo: "Mulher"},
+  {id: 30, nome: "Salmina Matlava", tipo: "Mulher"},
+  {id: 32, nome: "Benedito Mahacane", tipo: "Homem"},
+  {id: 33, nome: "Marta melembe", tipo: "Mulher"},
+  {id: 34, nome: "Carminda Manhica", tipo: "Mulher"},
+  {id: 35, nome: "Quinita da Silva", tipo: "Mulher"},
+  {id: 36, nome: "Bento Nhacale", tipo: "Homem"},
+  {id: 38, nome: "Ir Lumina", tipo: "Mulher"},
+  {id: 40, nome: "Clara Manhica", tipo: "Mulher"},
+  {id: 41, nome: "Pedro Manhica", tipo: "Homem"},
+  {id: 42, nome: "Rute Mahumana", tipo: "Mulher"},
+  {id: 43, nome: "Serafino Melembe", tipo: "Jovem"},
+  {id: 44, nome: "Raquel Coana", tipo: "Jovem"},
+  {id: 45, nome: "Carmena Rosa", tipo: "Jovem"},
+  {id: 46, nome: "Carlos Ntimana", tipo: "Homem"},
+  {id: 47, nome: "Feliz Chirindza", tipo: "Jovem"},
+  {id: 48, nome: "Carlos Timane", tipo: "Homem"},
+  {id: 49, nome: "Francisco Tivana", tipo: "Homem"},
+  {id: 50, nome: "Artimiza Chilaule", tipo: "Mulher"},
+  {id: 51, nome: "Celeste Cossa", tipo: "Mulher"},
+  {id: 52, nome: "Sergio Cumbane", tipo: "Homem"},
+  {id: 54, nome: "Raquel Sergio", tipo: "Jovem"},
+  {id: 57, nome: "Jossias Matlava", tipo: "Homem"},
+  {id: 58, nome: "Jaime Macombo", tipo: "Jovem"},
+  {id: 59, nome: "Salvador Matha", tipo: "Jovem"},
+  {id: 60, nome: "Ercilia Nbevana", tipo: "Mulher"},
+  {id: 61, nome: "Aida Cossa", tipo: "Mulher"},
+  {id: 62, nome: "Gildo Mahumana", tipo: "Homem"},
+  {id: 63, nome: "Juliao Julio", tipo: "Homem"},
+  {id: 64, nome: "Noemia Muthombene", tipo: "Mulher"},
+  {id: 65, nome: "Manuel Muthonbene", tipo: "Homem"},
+  {id: 66, nome: "Benilde Nhancale", tipo: "Mulher"},
+  {id: 67, nome: "Amelia Ndimande", tipo: "Mulher"},
+  {id: 70, nome: "Amelia Mboana", tipo: "Mulher"},
+  {id: 71, nome: "Luis Nboana", tipo: "Homem"},
+  {id: 72, nome: "Luis Pinto Manhica", tipo: "Homem"},
+  {id: 73, nome: "Delfina Armando Katema Manhica", tipo: "Mulher"},
+  {id: 74, nome: "Matilde Melembe", tipo: "Mulher"},
+  {id: 75, nome: "Arnaldo Cunica", tipo: "Homem"},
+  {id: 76, nome: "Jacinto Massingue", tipo: "Homem"},
+  {id: 77, nome: "Aleandra Massingue", tipo: "Mulher"},
+  {id: 78, nome: "Gonsalves Xirindza", tipo: "Homem"},
+  {id: 79, nome: "Perpetua Xirindza", tipo: "Mulher"},
+  {id: 80, nome: "Costancia honwane", tipo: "Mulher"},
+  {id: 81, nome: "Cebastiao Honwane", tipo: "Homem"},
+  {id: 82, nome: "Blautina Melembe", tipo: "Mulher"},
+  {id: 83, nome: "Germano Melembe", tipo: "Homem"},
+  {id: 84, nome: "Celso Melembe", tipo: "Homem"},
+  {id: 85, nome: "Agostinho Macamo", tipo: "Homem"},
+  {id: 87, nome: "Atalia Mandlate", tipo: "Mulher"},
+  {id: 88, nome: "Juliao Justino", tipo: "Homem"},
+  {id: 89, nome: "Joao Mucasse", tipo: "Mulher"},
+  {id: 90, nome: "Elina Mucasse", tipo: "Mulher"},
+  {id: 91, nome: "Ofelia Simao Tsungo", tipo: "Mulher"},
+  {id: 92, nome: "Sonia Machava", tipo: "Mulher"},
+  {id: 93, nome: "Luisa Matlava", tipo: "Jovem"},
+  {id: 94, nome: "Horacio \"da Sonia\"", tipo: "Homem"},
+  {id: 95, nome: "Luis Junior", tipo: "Jovem"}
+];
+
+
+  const membrosDevocional = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 18, 19, 21, 32, 34, 36, 43, 47, 57, 62, 63, 72, 73, 75, 76, 78, 79, 80, 83, 85, 89, 90
+
+  ];
+
+    const startDate = new Date("2025-04-14");
+    let currentWeek = 0;
+    let generatedWeeks = {};
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function generateWeekSchedule(weekOffset) {
+      if (generatedWeeks[weekOffset]) return generatedWeeks[weekOffset];
+
+      const weekSchedule = [];
+      let allMembros = [...membros];
+      let devocionais = membros.filter(m => membrosDevocional.includes(m.id));
+
+      let usados = new Set();
+      let luisIncluido = false;
+
+      for (let d = 0; d < 7; d++) {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + d + weekOffset * 7);
+
+        const dia = date.toLocaleDateString("pt-PT", { weekday: 'long', day: 'numeric', month: 'short' });
+
+        let diaData = { dia, horarios: [] };
+
+        for (let h of ["06:00", "18:00"]) {
+          let diaShuffle = shuffle(allMembros.filter(m => !usados.has(m.id)));
+          let louvor = diaShuffle.pop(); if (!louvor) louvor = {nome: "(N/A)"}; else usados.add(louvor.id);
+          let oracao = diaShuffle.pop(); if (!oracao) oracao = {nome: "(N/A)"}; else usados.add(oracao.id);
+
+          let devShuffle = shuffle(devocionais.filter(m => !usados.has(m.id)));
+          let devocional = devShuffle.pop(); if (!devocional) devocional = {nome: "(N/A)"}; else usados.add(devocional.id);
+
+          if ([louvor.id, oracao.id, devocional.id].includes(72)) luisIncluido = true;
+
+          diaData.horarios.push({hora: h, louvor: louvor.nome, oracao: oracao.nome, devocional: devocional.nome});
+        }
+
+        weekSchedule.push(diaData);
+      }
+
+      if (!luisIncluido) {
+        let diaRand = Math.floor(Math.random() * 7);
+        let horaRand = Math.floor(Math.random() * 2);
+        weekSchedule[diaRand].horarios[horaRand].louvor = "Luis Pinto Manhica";
+      }
+
+      generatedWeeks[weekOffset] = weekSchedule;
+      return weekSchedule;
+    }
+
+    function displayWeek() {
+      const schedule = document.getElementById("schedule");
+      const weekLabel = document.getElementById("weekLabel");
+      schedule.innerHTML = "";
+
+      const monday = new Date(startDate);
+      monday.setDate(monday.getDate() + currentWeek * 7);
+      const end = new Date(monday);
+      end.setDate(end.getDate() + 6);
+      weekLabel.innerText = `${monday.toLocaleDateString()} até ${end.toLocaleDateString()}`;
+
+      const weekData = generateWeekSchedule(currentWeek);
+
+      for (let dia of weekData) {
+        const div = document.createElement("div");
+        div.className = "day";
+        div.innerHTML = `<strong>${dia.dia}</strong>`;
+        for (let h of dia.horarios) {
+          div.innerHTML += `<div class="time-block"><strong>${h.hora}</strong><br>🎶 Louvor: ${h.louvor}<br>🙏 Oração: ${h.oracao}<br>📖 Devocional: ${h.devocional}</div>`;
+        }
+        schedule.appendChild(div);
+      }
+    }
+
+    function changeWeek(offset) {
+      if (currentWeek + offset >= 0 && currentWeek + offset < 12) {
+        currentWeek += offset;
+        displayWeek();
+      }
+    }
+
+    function copyToWhatsApp() {
+  const tipo = document.getElementById("tipoEscala").value;
+  const weekData = generateWeekSchedule(currentWeek);
+
+  const segunda = new Date(startDate);
+  segunda.setDate(segunda.getDate() + currentWeek * 7);
+  const domingo = new Date(segunda);
+  domingo.setDate(domingo.getDate() + 6);
+
+  const formatarData = (data) => {
+    return data.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' });
+  };
+
+  let text = `Saudações amados: a cada dia teremos duas vozes diferentes para ${tipo === 'oracao' ? 'orarem' : tipo === 'louvor' ? 'ministrarem o louvor' : tipo === 'devocional' ? 'trazerem o devocional' : 'participarem'} aqui no grupo.\n`;
+  text += `Semana de: ${formatarData(segunda)} até ${formatarData(domingo)}\n\n`;
+  text += `\n`;
+  text += `${tipo.toUpperCase() === "ORACAO" ? "ORAÇÃO" : tipo.toUpperCase() === "LOUVOR" ? "LOUVOR" : tipo.toUpperCase() === "DEVOCIONAL" ? "DEVOCIONAL" : "ESCALA"} dirigida pelo/a:\n\n`;
+
+  for (let dia of weekData) {
+    const nomeDia = dia.dia.split(',')[0];
+    text += `*${nomeDia.charAt(0).toUpperCase() + nomeDia.slice(1)}*\n\n`;
+
+    for (let i = 0; i < dia.horarios.length; i++) {
+      const h = dia.horarios[i];
+      let nome = "";
+
+      if (tipo === "louvor") nome = h.louvor;
+      else if (tipo === "oracao") nome = h.oracao;
+      else if (tipo === "devocional") nome = h.devocional;
+      else nome = `Louvor: ${h.louvor}, Oração: ${h.oracao}, Devocional: ${h.devocional}`;
+
+      let horaFormatada = h.hora.replace("06:00", "6:30").replace("18:00", "18:30");
+
+      if (tipo === "completo") {
+        text += `${h.hora} => ${nome}\n`;
+      } else {
+        text += `${nome} => ${horaFormatada}\n`;
+      }
+    }
+
+    text += `\n`;
+  }
+
+  text += `NB:\nTodas as manhãs deverá passar uma voz de ${tipo === 'oracao' ? 'oração' : tipo === 'louvor' ? 'louvor' : tipo === 'devocional' ? 'devocional' : 'oração'} no grupo. Fica preparado, pois seu nome pode aparecer por aqui. Atualize quem está na escala.`;
+
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+    displayWeek();
+  </script>
+</body>
+</html>
