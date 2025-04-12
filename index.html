@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>365 Dias de Oração e Jejum</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    header {
+      background-color: #2b4d66;
+      color: white;
+      width: 100%;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .message {
+      margin: 30px auto;
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 15px 25px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+    }
+
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      background-color: #2b4d66;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1e3b52;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 22px;
+      }
+
+      h2 {
+        font-size: 16px;
+      }
+
+      .message {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Primeira Igreja Baptista da Manhiça</h1>
+    <h2>365 Dias de Oração e Jejum</h2>
+    
+  </header>
+
+  <div class="message">
+    ⚠️ Este site ainda está em desenvolvimento e está disponível apenas para a <strong>comissão</strong>.<br>
+    O objetivo é facilitar a criação das escalas de oração e jejum. Agradecemos pela compreensão.
+  </div>
+
+  <div class="buttons">
+    <button onclick="window.location.href='escalaoracao.html'">Ver Escalas de Oração</button>
+    <button onclick="alert('As escalas de jejum ainda não estão disponíveis. Em breve serão adicionadas.')">Ver Escalas de Jejum</button>
+  </div>
+</body>
+</html>
